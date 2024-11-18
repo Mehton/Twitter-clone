@@ -1,7 +1,8 @@
 #root {
-  /* max-width: 1280px; */
   margin: 0 auto;
   text-align: center;
+  background-color: #e6ecf0;
+  height: 100vh;
 }
 
 
@@ -35,13 +36,14 @@
 }
 
 .tweet-box textarea {
-  width: 100%;
+  width: 80%;
+  resize: none;
   padding: 12px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   margin-bottom: 15px;
-  min-height: 120px;
+  min-height: 60px;
 }
 
 .tweet-box button {

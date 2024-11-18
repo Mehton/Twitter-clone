@@ -1,10 +1,12 @@
-# Web Development Final Project - _Twitter Clone_
+# Web Development Final Project - _Twitter Clone(Did not submit to codepath)_
 
 Submitted by: **Bhupinder jit Mehton**
 
 This web app: **Replica of the old twitter (X.com) website.**
 
 Time spent: **X** hours spent in total
+
+Todo: **Need to work on user authentication and session.**
 
 ## Required Features
 

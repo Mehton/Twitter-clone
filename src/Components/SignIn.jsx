@@ -1,11 +1,14 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import supabase from "../client";
 import "./SignIn.css";
 
 const SignInPage = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  // const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,15 +21,37 @@ const SignInPage = () => {
     return tempErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      // Call your API for sign-in here
-      console.log("User logged in:", form);
-      navigate("/home"); // Redirect to home page after successful login
+      try {
+        setIsLoading(true);
+        const { email, password } = form;
+
+        // Query the custom table for the user's email and password
+        const { data, error } = await supabase
+          .from("Twitter-clone")
+          .select("email, password")
+          .eq("email", email)
+          .eq("password", password) // Check for matching email/password (not secure!)
+          .single(); // Get a single row
+
+        if (error) {
+          setErrorMessage("Invalid email or password");
+        } else {
+          console.log("User found:", data);
+          // After authentication, you can store the user or session info
+          // and redirect them to the home page
+        }
+      } catch (error) {
+        setErrorMessage("Something went wrong. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+      window.location = "/home";
     }
   };
 
@@ -52,11 +77,15 @@ const SignInPage = () => {
         />
         {errors.password && <p className="error">{errors.password}</p>}
 
-        <button type="submit">Sign In</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? "Signing In..." : "Sign In"}
+        </button>
+
+        {errorMessage && <p className="error">{errorMessage}</p>}
       </form>
 
       <p>
-        Don't have an account? <Link to="/signup">Sign Up</Link>
+        Don't have an account? <a href="/signup">Sign Up</a>
       </p>
     </div>
   );
